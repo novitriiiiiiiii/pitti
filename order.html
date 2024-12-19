@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konfirmasi Pesanan</title>
+  <!-- Link ke Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+  <div class="order-container">
+    <h1 class="order-title">Konfirmasi Pesanan</h1>
+
+    <!-- Form untuk detail pelanggan -->
+    <form id="order-form" onsubmit="submitOrder(event)">
+      <div class="form-group">
+        <label for="customer-name">Nama Pelanggan:</label>
+        <input type="text" id="customer-name" name="customerName" placeholder="Masukkan nama Anda" required>
+      </div>
+
+      <div class="form-group">
+        <label for="order-item">Pesanan:</label>
+        <input type="text" id="order-item" name="orderItem" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="order-price">Harga Satuan:</label>
+        <input type="text" id="order-price" name="orderPrice" readonly>
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">Jumlah:</label>
+        <input type="number" id="quantity" name="quantity" value="1" min="1" required>
+      </div>
+
+      <div class="form-group">
+        <label for="payment-method">Metode Pembayaran:</label>
+        <select id="payment-method" name="paymentMethod" required>
+          <option value="Tunai">Tunai</option>
+          <option value="Transfer_bank">Transfer Bank</option>
+          <option value="E_Wallet">E-Wallet</option>
+          <option value="Dana">Dana</option>
+          <option value="Qris">Qris</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="total-price">Total Harga:</label>
+        <input type="text" id="total-price" name="totalPrice" readonly>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="order-button">Konfirmasi Pesanan</button> 
+        <a href="menu.html" class="order-button back-button">Kembali ke Menu</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Mendapatkan data dari query string
+    const params = new URLSearchParams(window.location.search);
+    const item = params.get('item');
+    const price = Number(params.get('price'));
+
+    // Menampilkan data pesanan di form
+    document.getElementById('order-item').value = item;
+    document.getElementById('order-price').value = `Rp ${price.toLocaleString()}`;
+    calculateTotal(); // Hitung total saat pertama kali dimuat
+
+    // Menghitung total harga berdasarkan jumlah pesanan
+    document.getElementById('quantity').addEventListener('input', calculateTotal);
+    function calculateTotal() {
+      const quantity = Number(document.getElementById('quantity').value);
+      const total = price * quantity;
+      document.getElementById('total-price').value = `Rp ${total.toLocaleString()}`;
+    }
+
+    // Fungsi untuk submit pesanan
+    function submitOrder(event) {
+      event.preventDefault(); // Mencegah reload halaman
+      const customerName = document.getElementById('customer-name').value;
+      const total = document.getElementById('total-price').value;
+      const paymentMethod = document.getElementById('payment-method').value;
+
+      alert(`Pesanan atas nama ${customerName} telah dikonfirmasi.\nTotal: ${total}\nMetode Pembayaran: ${paymentMethod}`);
+      // Tambahkan logika untuk mengirim data ke server jika diperlukan
+    }
+  </script>
+</body>
+</html>
